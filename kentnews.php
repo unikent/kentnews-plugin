@@ -2,7 +2,7 @@
 /*
 	Plugin Name: KentNews
 	Plugin URI: 
-	Description: Kent's own news plugin. Add custom news plugins
+	Description: Kent's own news plugin. Adds 'Featured Academics' and 'Schools' taxonomies to our posts.
 	Version: 0.0
 	Author: Justice Addison
 	Author URI: http://blogs.kent.ac.uk/webdev/
