@@ -172,4 +172,55 @@ class KentNews {
 
 }
 
-$compuses = new KentNews();
+$campuses = new KentNews();
+
+
+
+/**
+ * restrict tags editing in a post
+*/
+// remove the old tag box
+function remove_default_tags_box() {
+    remove_meta_box('tagsdiv-post_tag', 'post', 'side');
+}
+add_action( 'admin_menu', 'remove_default_tags_box' );
+
+
+// add the new tag box
+function add_custom_tags_box() {
+    add_meta_box('tagsdiv-post_tag', 'Tags', 'custom_post_tags_meta_box', 'post', 'side', 'low', array( 'taxonomy' => 'tag' ));
+}
+
+add_action('add_meta_boxes', 'add_custom_tags_box');
+
+
+/**
+ * Display new tag box
+ *
+ * @param object $post
+ */
+function custom_post_tags_meta_box($post, $box) {
+	$defaults = array('taxonomy' => 'post_tag');
+	if ( !isset($box['args']) || !is_array($box['args']) )
+		$args = array();
+	else
+		$args = $box['args'];
+	extract( wp_parse_args($args, $defaults), EXTR_SKIP );
+	$tax_name = esc_attr('post_tag');
+	$taxonomy = get_taxonomy('post_tag');
+?>
+<div class="tagsdiv" id="<?php echo $tax_name; ?>">
+	<div class="jaxtag">
+		<div class="nojs-tags hide-if-js">
+			<p>Sorry you must enable javascript to add tags.</p>
+			<textarea name="<?php echo "tax_input[$tax_name]"; ?>" class="the-tags" id="tax-input-<?php echo $tax_name; ?>"></textarea>
+		</div>
+	</div>
+	<div class="tagchecklist" style="padding-top:20px;"></div>
+</div>
+<div style="padding-top:20px;"><a href="#titlediv" class="tagcloud-link" id="link-<?php echo $tax_name; ?>">Add a tag</a></div>
+
+<?php
+}
+
+
