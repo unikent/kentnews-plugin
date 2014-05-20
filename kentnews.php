@@ -15,37 +15,37 @@ class KentNews {
 	 */
 	public function __construct() {
 
-		// academics taxonomy
-		add_action( 'init', array( $this, 'register_taxonomy_academics' )  );
-		add_action( 'academics_add_form_fields', array( $this, 'academics_taxonomy_add_new_meta_fields' ), 10, 2 );
-		add_action( 'academics_edit_form_fields', array( $this, 'academics_taxonomy_edit_meta_fields' ), 10, 2 );
-		add_action( 'edited_academics', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );  
-		add_action( 'create_academics', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );
+		// academic taxonomy
+		add_action( 'init', array( $this, 'register_taxonomy_academic' )  );
+		add_action( 'academic_add_form_fields', array( $this, 'academic_taxonomy_add_new_meta_fields' ), 10, 2 );
+		add_action( 'academic_edit_form_fields', array( $this, 'academic_taxonomy_edit_meta_fields' ), 10, 2 );
+		add_action( 'edited_academic', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );  
+		add_action( 'create_academic', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );
 
-		add_action( 'init', array( $this, 'register_taxonomy_schools' )  );
+		add_action( 'init', array( $this, 'register_taxonomy_school' )  );
 	}
 
 	/**
-	 * Add a featured academics taxonomy so that we can add featured academics to our posts.
+	 * Add a featured academic taxonomy so that we can add featured academics to our posts.
 	 */
-	function register_taxonomy_academics() {
+	function register_taxonomy_academic() {
 
 	    $labels = array( 
-	        'name' => _x( 'Featured Academics', 'academics' ),
-	        'singular_name' => _x( 'Featured Academic', 'academics' ),
-	        'search_items' => _x( 'Search Featured Academics', 'academics' ),
-	        'popular_items' => _x( 'Popular Featured Academics', 'academics' ),
-	        'all_items' => _x( 'All Featured Academics', 'academics' ),
-	        'parent_item' => _x( 'Parent Featured Academic', 'academics' ),
-	        'parent_item_colon' => _x( 'Parent Featured Academic:', 'academics' ),
-	        'edit_item' => _x( 'Edit Featured Academic', 'academics' ),
-	        'update_item' => _x( 'Update Featured Academic', 'academics' ),
-	        'add_new_item' => _x( 'Add New Featured Academic', 'academics' ),
-	        'new_item_name' => _x( 'New Featured Academic', 'academics' ),
-	        'separate_items_with_commas' => _x( 'Separate Featured Academics with commas', 'academics' ),
-	        'add_or_remove_items' => _x( 'Add or remove Featured Academics', 'academics' ),
-	        'choose_from_most_used' => _x( 'Choose from most used Featured Academics', 'academics' ),
-	        'menu_name' => _x( 'Featured Academics', 'academics' ),
+	        'name' => _x( 'Featured Academics', 'academic' ),
+	        'singular_name' => _x( 'Featured Academic', 'academic' ),
+	        'search_items' => _x( 'Search Featured Academics', 'academic' ),
+	        'popular_items' => _x( 'Popular Featured Academics', 'academic' ),
+	        'all_items' => _x( 'All Featured Academics', 'academic' ),
+	        'parent_item' => _x( 'Parent Featured Academic', 'academic' ),
+	        'parent_item_colon' => _x( 'Parent Featured Academic:', 'academic' ),
+	        'edit_item' => _x( 'Edit Featured Academic', 'academic' ),
+	        'update_item' => _x( 'Update Featured Academic', 'academic' ),
+	        'add_new_item' => _x( 'Add New Featured Academic', 'academic' ),
+	        'new_item_name' => _x( 'New Featured Academic', 'academic' ),
+	        'separate_items_with_commas' => _x( 'Separate Featured Academics with commas', 'academic' ),
+	        'add_or_remove_items' => _x( 'Add or remove Featured Academics', 'academic' ),
+	        'choose_from_most_used' => _x( 'Choose from most used Featured Academics', 'academic' ),
+	        'menu_name' => _x( 'Featured Academics', 'academic' ),
 	    );
 
 	    $args = array( 
@@ -55,9 +55,9 @@ class KentNews {
 	        'show_ui' => true,
 	        'show_tagcloud' => true,
 	        'show_admin_column' => true,
-	        'hierarchical' => false,
+	        'hierarchical' => true,
 	        'rewrite' => true,
-	        'meta_box_cb' => 'post_categories_meta_box', /*TODO: this creates a bug where. Fix it!*/
+	        'meta_box_cb' => 'post_categories_meta_box', /*TODO: this creates a bug when heirarchical is false. Fix it!*/
 	        'query_var' => true,
 	        /* TODO: find the right capabilities to use */
 	        'capabilities' => array(
@@ -68,30 +68,30 @@ class KentNews {
 			)
 	    );
 
-	    register_taxonomy( 'academics', array('post'), $args );
+	    register_taxonomy( 'academic', array('post'), $args );
 	}
 
 	/**
-	 * Add a schools taxonomy so that we can add schools to our posts.
+	 * Add a school taxonomy so that we can add schools to our posts.
 	 */
-	function register_taxonomy_schools() {
+	function register_taxonomy_school() {
 
 	    $labels = array( 
-	        'name' => _x( 'Schools', 'schools' ),
-	        'singular_name' => _x( 'School', 'schools' ),
-	        'search_items' => _x( 'Search Schools', 'schools' ),
-	        'popular_items' => _x( 'Popular Schools', 'schools' ),
-	        'all_items' => _x( 'All Schools', 'schools' ),
-	        'parent_item' => _x( 'Parent School', 'schools' ),
-	        'parent_item_colon' => _x( 'Parent School:', 'schools' ),
-	        'edit_item' => _x( 'Edit School', 'schools' ),
-	        'update_item' => _x( 'Update School', 'schools' ),
-	        'add_new_item' => _x( 'Add New School', 'schools' ),
-	        'new_item_name' => _x( 'New School', 'schools' ),
-	        'separate_items_with_commas' => _x( 'Separate Schools with commas', 'schools' ),
-	        'add_or_remove_items' => _x( 'Add or remove Schools', 'schools' ),
-	        'choose_from_most_used' => _x( 'Choose from most used Schools', 'schools' ),
-	        'menu_name' => _x( 'Schools', 'schools' ),
+	        'name' => _x( 'Schools', 'school' ),
+	        'singular_name' => _x( 'School', 'school' ),
+	        'search_items' => _x( 'Search Schools', 'school' ),
+	        'popular_items' => _x( 'Popular Schools', 'school' ),
+	        'all_items' => _x( 'All Schools', 'school' ),
+	        'parent_item' => _x( 'Parent School', 'school' ),
+	        'parent_item_colon' => _x( 'Parent School:', 'school' ),
+	        'edit_item' => _x( 'Edit School', 'school' ),
+	        'update_item' => _x( 'Update School', 'school' ),
+	        'add_new_item' => _x( 'Add New School', 'school' ),
+	        'new_item_name' => _x( 'New School', 'school' ),
+	        'separate_items_with_commas' => _x( 'Separate Schools with commas', 'school' ),
+	        'add_or_remove_items' => _x( 'Add or remove Schools', 'school' ),
+	        'choose_from_most_used' => _x( 'Choose from most used Schools', 'school' ),
+	        'menu_name' => _x( 'Schools', 'school' ),
 	    );
 
 	    $args = array( 
@@ -101,8 +101,9 @@ class KentNews {
 	        'show_ui' => true,
 	        'show_tagcloud' => true,
 	        'show_admin_column' => true,
-	        'hierarchical' => false,
+	        'hierarchical' => true,
 	        'rewrite' => true,
+	        'meta_box_cb' => 'post_categories_meta_box', /*TODO: this creates a bug when heirarchical is false. Fix it!*/
 	        'query_var' => true,
 	        /* TODO: find the right capabilities to use */
 	        'capabilities' => array(
@@ -113,27 +114,27 @@ class KentNews {
 			)
 	    );
 
-	    register_taxonomy( 'schools', array('post'), $args );
+	    register_taxonomy( 'school', array('post'), $args );
 	}
 
 	/**
-	 * Function to add custom fields (meta) to academics taxonomy.
+	 * Function to add custom fields (meta) to academic taxonomy.
 	 */
-	function academics_taxonomy_add_new_meta_fields() {
+	function academic_taxonomy_add_new_meta_fields() {
 		// this will add the custom meta field to the add new term page
 		?>
 		<div class="form-field">
-			<label for="term_meta[url]"><?php _e( 'URL', 'academics' ); ?></label>
+			<label for="term_meta[url]"><?php _e( 'URL', 'academic' ); ?></label>
 			<input type="text" name="term_meta[url]" id="term_meta[url]" value="">
-			<p class="description"><?php _e( 'Enter a value for this field','academics' ); ?></p>
+			<p class="description"><?php _e( 'Enter a value for this field','academic' ); ?></p>
 		</div>
 		<?php
 	}
 
 	/**
-	 * Function to edit custom fields (meta) in academics taxonomy.
+	 * Function to edit custom fields (meta) in academic taxonomy.
 	 */
-	function academics_taxonomy_edit_meta_fields($term) {
+	function academic_taxonomy_edit_meta_fields($term) {
 	 
 		// put the term ID into a variable
 		$t_id = $term->term_id;
@@ -142,10 +143,10 @@ class KentNews {
 		$term_meta = get_option( "taxonomy_$t_id" ); 
 		?>
 		<tr class="form-field">
-		<th scope="row" valign="top"><label for="term_meta[url]"><?php _e( 'URL', 'academics' ); ?></label></th>
+		<th scope="row" valign="top"><label for="term_meta[url]"><?php _e( 'URL', 'academic' ); ?></label></th>
 			<td>
 				<input type="text" name="term_meta[url]" id="term_meta[url]" value="<?php echo esc_attr( $term_meta['url'] ) ? esc_attr( $term_meta['url'] ) : ''; ?>">
-				<p class="description"><?php _e( 'Enter a value for this field','academics' ); ?></p>
+				<p class="description"><?php _e( 'Enter a value for this field','academic' ); ?></p>
 			</td>
 		</tr>
 		<?php
