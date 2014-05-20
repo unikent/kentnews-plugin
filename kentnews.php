@@ -9,7 +9,7 @@
 	Author URI: http://blogs.kent.ac.uk/webdev/
 */
 
-	class KentNews {
+class KentNews {
 
 	/**
 	 * Our constructor
@@ -52,28 +52,28 @@
 			'menu_name' => _x( 'Featured Academics', 'academic' ),
 			);
 
-$args = array( 
-	'labels' => $labels,
-	'public' => true,
-	'show_in_nav_menus' => true,
-	'show_ui' => true,
-	'show_tagcloud' => true,
-	'show_admin_column' => true,
-	'hierarchical' => true,
-	'rewrite' => true,
-	'meta_box_cb' => 'post_categories_meta_box', /*TODO: this creates a bug when heirarchical is false. Fix it!*/
-	'query_var' => true,
-	/* TODO: find the right capabilities to use */
-	'capabilities' => array(
-		'manage_terms' => 'manage_categories',
-		'assign_terms' => 'manage_categories',
-		'edit_terms' => 'manage_categories',
-		'delete_terms' => 'manage_categories'
-		)
-	);
+		$args = array( 
+			'labels' => $labels,
+			'public' => true,
+			'show_in_nav_menus' => true,
+			'show_ui' => true,
+			'show_tagcloud' => true,
+			'show_admin_column' => true,
+			'hierarchical' => true,
+			'rewrite' => true,
+			'meta_box_cb' => 'post_categories_meta_box', /*TODO: this creates a bug when heirarchical is false. Fix it!*/
+			'query_var' => true,
+			/* TODO: find the right capabilities to use */
+			'capabilities' => array(
+				'manage_terms' => 'manage_categories',
+				'assign_terms' => 'manage_categories',
+				'edit_terms' => 'manage_categories',
+				'delete_terms' => 'manage_categories'
+				)
+			);
 
-register_taxonomy( 'academic', array('post'), $args );
-}
+		register_taxonomy( 'academic', array('post'), $args );
+	}
 
 	/**
 	 * Add a school taxonomy so that we can add schools to our posts.
