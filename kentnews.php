@@ -23,6 +23,9 @@ class KentNews {
 		add_action( 'create_academic', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );
 
 		add_action( 'init', array( $this, 'register_taxonomy_school' )  );
+
+		//add custom fields
+		//$this->add_custom_field_to_api('field_name');
 	}
 
 	/**
@@ -169,8 +172,20 @@ class KentNews {
 			update_option( "taxonomy_$t_id", $term_meta );
 		}
 	}
-	
 
+	/**
+	 * Add a custom field to the api.
+	 * To add all custom fields https://gist.github.com/fardog/9356458
+	 */
+	function add_custom_field_to_api($field_name){
+		add_filter( 'thermal_post_entity',  function($data, &$post, $state ) use ($field_name) {
+			if( $state === 'read' ){
+				$data->meta->$field_name = get_post_meta( $post->ID, $field_name, true );
+			}
+			return $data;
+		}, 10, 3);
+	}
+	
 }
 
 $news = new KentNews();
@@ -223,5 +238,3 @@ function custom_post_tags_meta_box($post, $box) {
 
 <?php
 }
-
-
