@@ -173,7 +173,7 @@ class KentNews {
 
 }
 
-$campuses = new KentNews();
+$news = new KentNews();
 
 
 
