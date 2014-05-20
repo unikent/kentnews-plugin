@@ -4,12 +4,13 @@
 	Plugin URI: 
 	Description: Kent's own news plugin. Adds 'Featured Academics' and 'Schools' taxonomies to our posts.
 	Version: 0.0
+	Depends: Thermal API
 	Author: Justice Addison
 	Author URI: http://blogs.kent.ac.uk/webdev/
 */
 
 	class KentNews {
-		
+
 	/**
 	 * Our constructor
 	 */
@@ -138,10 +139,10 @@ register_taxonomy( 'academic', array('post'), $args );
 	 * Function to edit custom fields (meta) in academic taxonomy.
 	 */
 	function academic_taxonomy_edit_meta_fields($term) {
-		
+
 		// put the term ID into a variable
 		$t_id = $term->term_id;
-		
+
 		// retrieve the existing value(s) for this meta field. This returns an array
 		$term_meta = get_option( "taxonomy_$t_id" ); 
 		?>
