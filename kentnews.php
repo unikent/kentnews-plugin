@@ -25,6 +25,10 @@ class KentNews {
 
 		add_action( 'init', array( $this, 'register_taxonomy_school' )  );
 
+		// primary category
+		add_action('admin_init', array($this, 'primary_category_init'));
+		add_action('save_post', array($this, 'save_category_details'));
+
 		//add all custom fields
 		$this->add_custom_fields_to_api();
 	}
@@ -251,6 +255,41 @@ class KentNews {
 			}
 		}
 		return $content;
+	}
+
+	function primary_category_init() {
+		add_meta_box("category-meta", "Default Category", array($this, "primary_category"), "post", "side", "low");
+	}
+
+	function primary_category() {
+		global $post;
+		$catKey = "primary_category";
+		$catSlug = get_post_meta($post->ID, $catKey, true);
+
+		$selected = "";
+		if (!empty($catSlug)) {
+			$catTerms = get_term_by('slug', $catSlug, 'category');
+			$categoryID = $catTerms->term_id;
+			$selected = "&selected=" . $categoryID;
+		}
+
+		?>
+		<label>Category:</label>
+		<?php
+
+		wp_dropdown_categories('show_option_none=Select category&name=primary_category&hide_empty=0' . $selected);
+	}
+
+	function save_category_details($post_id) {
+		global $post;
+
+		$catID = $_POST["primary_category"];
+
+		if(isset($_POST["primary_category"]) && $catID != "") {
+			$catTerms = get_term_by('term_id', $catID, 'category');
+			$catName = $catTerms->slug;
+			update_post_meta($post->ID, "primary_category", $catName);
+		}
 	}
 	
 }
