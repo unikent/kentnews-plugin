@@ -23,6 +23,7 @@ class KentNews {
 		add_action( 'edited_academic', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );  
 		add_action( 'create_academic', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );
 
+		// school taxonomy
 		add_action( 'init', array( $this, 'register_taxonomy_school' )  );
 
 		// primary category
@@ -30,7 +31,8 @@ class KentNews {
 		add_action('save_post', array($this, 'save_category_details'));
 
 		//add all custom fields
-		$this->add_custom_fields_to_api();
+		$this->add_post_custom_fields_to_api();
+		$this->add_media_custom_fields_to_api();
 	}
 
 	/**
@@ -179,66 +181,97 @@ class KentNews {
 	}
 
 	/**
-	 * Add all custom fields to the api.
-	 * reference https://gist.github.com/fardog/9356458
+	 * Add media custom fields to the api.
 	 */
-	function add_custom_fields_to_api(){
+	function add_media_custom_fields_to_api(){
 		add_filter( 'thermal_post_entity', function($data, &$post, $state ) {
 			if( $state === 'read' ){
-
-				// get all of the post's metadata
-				$custom_fields_raw = (object) get_post_meta($post->ID);
-
-				// uncomment the following to include the raw data for testing
-				//$data->meta->custom_fields_raw = $custom_fields_raw;
-
-				// create an object for storing all the post data
-				$sections = new StdClass;
-				$custom_fields_additional = array();
-
-				foreach ($custom_fields_raw as $fieldName => $content) {
-					// remove any fields that start with an underscore, as it's a private one
-					if (substr((string)$fieldName, 0, 1) == '_') continue;
-
-					// if the string matches the format string_X_string, where X is any
-					// integer then we need to put it into an object
-					if (preg_match('_\d+_', (string)$fieldName, $indexes) > 0) {
-						// we need a type of field, an index of that field, and an item
-						$index = (int) $indexes[0];
-						$keys = explode('_'.$index.'_', (string)$fieldName);
-						$type = $keys[0];
-						$item = $keys[1];
-
-						// we need the type of this item, which is only stored in that type's
-						// serialized content
-						$type_ref = &$custom_fields_raw->$type;
-						$type_info = unserialize($type_ref[0]);
-
-						// now we need to create an array for that type
-						if (!$sections->$type) $sections->$type = array();
-						$object = &$sections->$type;
-						// add the object's type, if we have one.
-						if ($type_info[$index]) $object[$index]->type = $type_info[$index];
-
-						// check if we've got an integer or serialized data, and massage to the
-						// right type accordingly
-						$content = north_cast_api_data($content[0]);
-
-						// now add the content to the data array
-						$object[$index]->data->$item = $content;
-					}
-					// if we didn't match that format, this may be an additional custom field 
-					// that needs to be included.
-					else {
-						$custom_fields_additional[$fieldName] = KentNews::north_cast_api_data($content[0]);
+				foreach ($data->media as &$media_item) {
+					$custom_fields = KentNews::get_custom_fields_from_post($media_item['id']);
+					foreach ($custom_fields->additional as $field_name => $field_value) {
+						$media_item[$field_name] = $field_value;
 					}
 				}
-
-				$data->meta->sections = $sections;
-				$data->meta->custom_fields = (object) $custom_fields_additional;
 			}
 			return $data;
 		}, 10, 3);
+	}
+
+	/**
+	 * Add post custom fields to the api.
+	 */
+	function add_post_custom_fields_to_api(){
+		add_filter( 'thermal_post_entity', function($data, &$post, $state ) {
+			if( $state === 'read' ){
+
+				$custom_fields = KentNews::get_custom_fields_from_post($post->ID);
+
+				$data->meta->sections = $custom_fields->sections;
+				$data->meta->custom_fields = $custom_fields->additional;
+			}
+			return $data;
+		}, 10, 3);
+	}
+
+	/**
+	 * Retrieve all custom fields for a given post
+	 * reference https://gist.github.com/fardog/9356458
+	 */
+	static function get_custom_fields_from_post($id){
+		$custom_fields = new StdClass;
+
+		// get all of the post's metadata
+		$custom_fields_raw = (object) get_post_meta($id);
+
+		// uncomment the following to include the raw data for testing
+		//$data->meta->custom_fields_raw = $custom_fields_raw;
+
+		// create an object for storing all the post data
+		$sections = new StdClass;
+		$custom_fields_additional = array();
+
+		foreach ($custom_fields_raw as $fieldName => $content) {
+			// remove any fields that start with an underscore, as it's a private one
+			if (substr((string)$fieldName, 0, 1) == '_') continue;
+
+			// if the string matches the format string_X_string, where X is any
+			// integer then we need to put it into an object
+			if (preg_match('_\d+_', (string)$fieldName, $indexes) > 0) {
+				// we need a type of field, an index of that field, and an item
+				$index = (int) $indexes[0];
+				$keys = explode('_'.$index.'_', (string)$fieldName);
+				$type = $keys[0];
+				$item = $keys[1];
+
+				// we need the type of this item, which is only stored in that type's
+				// serialized content
+				$type_ref = &$custom_fields_raw->$type;
+				$type_info = unserialize($type_ref[0]);
+
+				// now we need to create an array for that type
+				if (!$sections->$type) $sections->$type = array();
+				$object = &$sections->$type;
+				// add the object's type, if we have one.
+				if ($type_info[$index]) $object[$index]->type = $type_info[$index];
+
+				// check if we've got an integer or serialized data, and massage to the
+				// right type accordingly
+				$content = KentNews::north_cast_api_data($content[0]);
+
+				// now add the content to the data array
+				$object[$index]->data->$item = $content;
+			}
+			// if we didn't match that format, this may be an additional custom field 
+			// that needs to be included.
+			else {
+				$custom_fields_additional[$fieldName] = KentNews::north_cast_api_data($content[0]);
+			}
+		}
+
+		$custom_fields->sections = $sections;
+		$custom_fields->additional = (object) $custom_fields_additional;
+
+		return $custom_fields;
 	}
 
 	static function north_cast_api_data($content) {
