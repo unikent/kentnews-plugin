@@ -181,16 +181,25 @@ class KentNews {
 	}
 
 	/**
-	 * Add media custom fields to the api.
+	 * Add extra data to media in the api.
 	 */
 	function add_media_custom_fields_to_api(){
 		add_filter( 'thermal_post_entity', function($data, &$post, $state ) {
 			if( $state === 'read' ){
 				foreach ($data->media as &$media_item) {
-					$custom_fields = KentNews::get_custom_fields_from_post($media_item['id']);
+					$media_post = get_post($media_item['id']);
+
+					//add more data
+					$media_item['name'] = $media_post->post_name;
+					$media_item['description'] = $media_post->post_content;
+					$media_item['caption'] = $media_post->post_excerpt;
+
+					// add custom fields
+					$custom_fields = KentNews::get_custom_fields_from_post($media_post->ID);
 					foreach ($custom_fields->additional as $field_name => $field_value) {
 						$media_item[$field_name] = $field_value;
 					}
+
 				}
 			}
 			return $data;
