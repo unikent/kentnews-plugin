@@ -174,7 +174,7 @@ class KentNews {
 				)
 			);
 
-		register_taxonomy( 'tags', array('post'), $args );
+		register_taxonomy( 'tag', array('post'), $args );
 	}
 
 
