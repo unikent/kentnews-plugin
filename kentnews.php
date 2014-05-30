@@ -26,6 +26,10 @@ class KentNews {
 		// school taxonomy
 		add_action( 'init', array( $this, 'register_taxonomy_school' )  );
 
+
+		// Custom tag taxonomy
+		add_action( 'init', array( $this, 'register_taxonomy_tag' )  );
+
 		// primary category
 		add_action('admin_init', array($this, 'primary_category_init'));
 		add_action('save_post', array($this, 'save_category_details'));
@@ -126,6 +130,54 @@ class KentNews {
 
 		register_taxonomy( 'school', array('post'), $args );
 	}
+
+	/**
+	 * Add a custom Tag taxonomy so that we can permission tag creation.
+	 */
+	function register_taxonomy_tag() {
+
+		$labels = array( 
+			'name' => _x( 'Tag', 'tag' ),
+			'singular_name' => _x( 'tag', 'tag' ),
+			'search_items' => _x( 'Search Tag', 'tag' ),
+			'popular_items' => _x( 'Popular Tag', 'tag' ),
+			'all_items' => _x( 'All Tag', 'tag' ),
+			'parent_item' => _x( 'Parent tag', 'tag' ),
+			'parent_item_colon' => _x( 'Parent tag:', 'tag' ),
+			'edit_item' => _x( 'Edit tag', 'tag' ),
+			'update_item' => _x( 'Update tag', 'tag' ),
+			'add_new_item' => _x( 'Add New tag', 'tag' ),
+			'new_item_name' => _x( 'New tag', 'tag' ),
+			'separate_items_with_commas' => _x( 'Separate Tag with commas', 'tag' ),
+			'add_or_remove_items' => _x( 'Add or remove Tag', 'tag' ),
+			'choose_from_most_used' => _x( 'Choose from most used Tag', 'tag' ),
+			'menu_name' => _x( 'Tag', 'tag' ),
+			);
+
+		$args = array( 
+			'labels' => $labels,
+			'public' => true,
+			'show_in_nav_menus' => true,
+			'show_ui' => true,
+			'show_tagcloud' => true,
+			'show_admin_column' => true,
+			'hierarchical' => true,
+			'rewrite' => true,
+			'meta_box_cb' => 'post_tags_meta_box',
+			'query_var' => true,
+			/* TODO: find the right capabilities to use */
+			'capabilities' => array(
+				'manage_terms' => 'manage_categories',
+				'assign_terms' => 'manage_categories',
+				'edit_terms' => 'manage_categories',
+				'delete_terms' => 'manage_categories'
+				)
+			);
+
+		register_taxonomy( 'tags', array('post'), $args );
+	}
+
+
 
 	/**
 	 * Function to add custom fields (meta) to academic taxonomy.
