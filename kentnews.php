@@ -376,10 +376,9 @@ class KentNews {
 
 	function save_category_details($post_id) {
 		global $post;
+		$catID = isset($_POST["primary_category"]) ? $_POST["primary_category"] : "";
 
-		$catID = $_POST["primary_category"];
-
-		if(isset($_POST["primary_category"]) && $catID != "") {
+		if($catID != "") {
 			$catTerms = get_term_by('term_id', $catID, 'category');
 			$catName = $catTerms->slug;
 			update_post_meta($post->ID, "primary_category", $catName);
