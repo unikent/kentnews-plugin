@@ -377,10 +377,9 @@ class KentNews {
 
 	function save_category_details($post_id) {
 		global $post;
+		$catID = isset($_POST["primary_category"]) ? $_POST["primary_category"] : "";
 
-		$catID = $_POST["primary_category"];
-
-		if(isset($_POST["primary_category"]) && $catID != "") {
+		if($catID != "") {
 			$catTerms = get_term_by('term_id', $catID, 'category');
 			$catName = $catTerms->slug;
 			update_post_meta($post->ID, "primary_category", $catName);
@@ -434,7 +433,7 @@ function predefined_tags_meta_box($post, $box) {
                 // Is probably bipassable if someone "REALLLY" wanted, but this is a staff only system anyway.
                 // tags can now be defined from tags menu page only.
                 $tag_option = get_terms($tax_name, array('hide_empty' => 0,'orderby' => 'name', 'hierarchical' => 0));  ?>
-                <select id="tag-selector" class="postform" tabindex="3" style='width:70%;' onchange="document.getElementById('new-tag-tag').value = this.options[this.selectedIndex].value" >
+                <select id="tag-selector" class="postform" tabindex="3" style='width:70%;' onchange="document.getElementById('new-tag-<?php echo $tax_name; ?>').value = this.options[this.selectedIndex].value" >
 					<option value="-1" >— Tag — </option>
 					<?php foreach($tag_option as $tag): ?>
 						<option class="level-0" value="<?php echo $tag->name; ?>"><?php echo $tag->name; ?></option>
