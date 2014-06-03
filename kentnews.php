@@ -245,6 +245,7 @@ class KentNews {
 					$media_item['name'] = $media_post->post_name;
 					$media_item['description'] = $media_post->post_content;
 					$media_item['caption'] = $media_post->post_excerpt;
+					$media_item['title'] = $media_post->post_title;
 
 					// add custom fields
 					$custom_fields = KentNews::get_custom_fields_from_post($media_post->ID);
