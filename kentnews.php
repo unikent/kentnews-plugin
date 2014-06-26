@@ -296,38 +296,8 @@ class KentNews {
 			// remove any fields that start with an underscore, as it's a private one
 			if (substr((string)$fieldName, 0, 1) == '_') continue;
 
-			// if the string matches the format string_X_string, where X is any
-			// integer then we need to put it into an object
-			if (preg_match('_\d+_', (string)$fieldName, $indexes) > 0) {
-				// we need a type of field, an index of that field, and an item
-				$index = (int) $indexes[0];
-				$keys = explode('_'.$index.'_', (string)$fieldName);
-				$type = $keys[0];
-				$item = $keys[1];
+			$custom_fields_additional[$fieldName] = KentNews::north_cast_api_data($content[0]);
 
-				// we need the type of this item, which is only stored in that type's
-				// serialized content
-				$type_ref = &$custom_fields_raw->$type;
-				$type_info = unserialize($type_ref[0]);
-
-				// now we need to create an array for that type
-				if (!$sections->$type) $sections->$type = array();
-				$object = &$sections->$type;
-				// add the object's type, if we have one.
-				if ($type_info[$index]) $object[$index]->type = $type_info[$index];
-
-				// check if we've got an integer or serialized data, and massage to the
-				// right type accordingly
-				$content = KentNews::north_cast_api_data($content[0]);
-
-				// now add the content to the data array
-				$object[$index]->data->$item = $content;
-			}
-			// if we didn't match that format, this may be an additional custom field 
-			// that needs to be included.
-			else {
-				$custom_fields_additional[$fieldName] = KentNews::north_cast_api_data($content[0]);
-			}
 		}
 
 		$custom_fields->sections = $sections;
