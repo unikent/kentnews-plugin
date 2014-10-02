@@ -25,6 +25,10 @@ class KentNews {
 
 		// school taxonomy
 		add_action( 'init', array( $this, 'register_taxonomy_school' )  );
+		add_action( 'school_add_form_fields', array( $this, 'school_taxonomy_add_new_meta_fields' ), 10, 2 );
+		add_action( 'school_edit_form_fields', array( $this, 'school_taxonomy_edit_meta_fields' ), 10, 2 );
+		add_action( 'edited_school', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );  
+		add_action( 'create_school', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );
 
 
 		// Custom tag taxonomy
@@ -177,8 +181,6 @@ class KentNews {
 		register_taxonomy( 'tag', array('post'), $args );
 	}
 
-
-
 	/**
 	 * Function to add custom fields (meta) to academic taxonomy.
 	 */
@@ -188,7 +190,7 @@ class KentNews {
 		<div class="form-field">
 			<label for="term_meta[url]"><?php _e( 'URL', 'academic' ); ?></label>
 			<input type="text" name="term_meta[url]" id="term_meta[url]" value="">
-			<p class="description"><?php _e( 'Enter a value for this field','academic' ); ?></p>
+			<p class="description"><?php _e( 'Enter a URL for this academic','academic' ); ?></p>
 		</div>
 		<?php
 	}
@@ -208,7 +210,42 @@ class KentNews {
 			<th scope="row" valign="top"><label for="term_meta[url]"><?php _e( 'URL', 'academic' ); ?></label></th>
 			<td>
 				<input type="text" name="term_meta[url]" id="term_meta[url]" value="<?php echo esc_attr( $term_meta['url'] ) ? esc_attr( $term_meta['url'] ) : ''; ?>">
-				<p class="description"><?php _e( 'Enter a value for this field','academic' ); ?></p>
+				<p class="description"><?php _e( 'Enter a URL for this academic','academic' ); ?></p>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Function to add custom fields (meta) to school taxonomy.
+	 */
+	function school_taxonomy_add_new_meta_fields() {
+		// this will add the custom meta field to the add new term page
+		?>
+		<div class="form-field">
+			<label for="term_meta[short_name]"><?php _e( 'Short Name', 'school' ); ?></label>
+			<input type="text" name="term_meta[short_name]" id="term_meta[short_name]" value="">
+			<p class="description"><?php _e( 'Enter a short name for this school. E.g KBS for Kent Business School.','school' ); ?></p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Function to edit custom fields (meta) in school taxonomy.
+	 */
+	function school_taxonomy_edit_meta_fields($term) {
+
+		// put the term ID into a variable
+		$t_id = $term->term_id;
+
+		// retrieve the existing value(s) for this meta field. This returns an array
+		$term_meta = get_option( "taxonomy_$t_id" ); 
+		?>
+		<tr class="form-field">
+			<th scope="row" valign="top"><label for="term_meta[short_name]"><?php _e( 'Short Name', 'school' ); ?></label></th>
+			<td>
+				<input type="text" name="term_meta[short_name]" id="term_meta[short_name]" value="<?php echo esc_attr( $term_meta['short_name'] ) ? esc_attr( $term_meta['short_name'] ) : ''; ?>">
+				<p class="description"><?php _e( 'Enter a short name for this school. E.g KBS for Kent Business School.','school' ); ?></p>
 			</td>
 		</tr>
 		<?php
