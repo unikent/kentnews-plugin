@@ -22,6 +22,7 @@ class KentNews {
 		add_action( 'academic_edit_form_fields', array( $this, 'academic_taxonomy_edit_meta_fields' ), 10, 2 );
 		add_action( 'edited_academic', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );  
 		add_action( 'create_academic', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );
+		add_filter( 'manage_edit-academic_columns', array( $this, 'academic_columns'), 10, 1); 
 
 		// school taxonomy
 		add_action( 'init', array( $this, 'register_taxonomy_school' )  );
@@ -29,7 +30,8 @@ class KentNews {
 		add_action( 'school_edit_form_fields', array( $this, 'school_taxonomy_edit_meta_fields' ), 10, 2 );
 		add_action( 'edited_school', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );  
 		add_action( 'create_school', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );
-
+		add_filter( 'manage_edit-school_columns', array( $this, 'school_columns'), 10, 1); 
+		add_filter( 'manage_school_custom_column', array( $this, 'manage_school_columns'), 10, 3);
 
 		// Custom tag taxonomy
 		add_action( 'init', array( $this, 'register_taxonomy_tag' )  );
@@ -217,6 +219,14 @@ class KentNews {
 	}
 
 	/**
+	 * Function to specify custom colums in academic taxonomy.
+	 */
+	function academic_columns($academic_columns) {
+		unset($academic_columns['description']);
+		return $academic_columns;
+	}
+
+	/**
 	 * Function to add custom fields (meta) to school taxonomy.
 	 */
 	function school_taxonomy_add_new_meta_fields() {
@@ -249,6 +259,43 @@ class KentNews {
 			</td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * Function to specify custom colums in school taxonomy.
+	 */
+	function school_columns($school_columns) {
+		$new_columns = array(
+			'cb' => '<input type="checkbox" />',
+			'name' => __('Name'),
+			'short_name' => 'Short Name',
+			'slug' => __('Slug'),
+			'posts' => __('Count')
+		);
+		return $new_columns;
+	}
+
+	/**
+	 * Function to set custom colums in school taxonomy.
+	 */
+	function manage_school_columns($out, $column_name, $term_id) {
+
+		// retrieve the existing value(s) for this meta field. This returns an array
+		$school_meta = get_option( "taxonomy_$term_id" ); 
+
+		//$school = get_term($term_id, 'school');
+
+		$column_value = '';
+
+		switch ($column_name) {
+			case 'short_name': 
+				$column_value = isset($school_meta['short_name']) ? $school_meta['short_name'] : ''; 
+				break;
+			default:
+				break;
+		}
+		
+		return $column_value;    
 	}
 
 	/**
