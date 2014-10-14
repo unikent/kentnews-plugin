@@ -97,21 +97,21 @@ class KentNews {
 	function register_taxonomy_school() {
 
 		$labels = array( 
-			'name' => _x( 'Schools', 'school' ),
+			'name' => _x( 'Schools and Departments', 'school' ),
 			'singular_name' => _x( 'School', 'school' ),
-			'search_items' => _x( 'Search Schools', 'school' ),
-			'popular_items' => _x( 'Popular Schools', 'school' ),
-			'all_items' => _x( 'All Schools', 'school' ),
-			'parent_item' => _x( 'Parent School', 'school' ),
-			'parent_item_colon' => _x( 'Parent School:', 'school' ),
-			'edit_item' => _x( 'Edit School', 'school' ),
-			'update_item' => _x( 'Update School', 'school' ),
-			'add_new_item' => _x( 'Add New School', 'school' ),
+			'search_items' => _x( 'Search Schools and Departments', 'school' ),
+			'popular_items' => _x( 'Popular Schools and Departments', 'school' ),
+			'all_items' => _x( 'All Schools and Departments', 'school' ),
+			'parent_item' => _x( 'Parent School/Department', 'school' ),
+			'parent_item_colon' => _x( 'Parent School/Department:', 'school' ),
+			'edit_item' => _x( 'Edit School/Department', 'school' ),
+			'update_item' => _x( 'Update School/Department', 'school' ),
+			'add_new_item' => _x( 'Add New School/Department', 'school' ),
 			'new_item_name' => _x( 'New School', 'school' ),
 			'separate_items_with_commas' => _x( 'Separate Schools with commas', 'school' ),
-			'add_or_remove_items' => _x( 'Add or remove Schools', 'school' ),
-			'choose_from_most_used' => _x( 'Choose from most used Schools', 'school' ),
-			'menu_name' => _x( 'Schools', 'school' ),
+			'add_or_remove_items' => _x( 'Add or remove Schools/Departments', 'school' ),
+			'choose_from_most_used' => _x( 'Choose from most used Schools/Departments', 'school' ),
+			'menu_name' => _x( 'Schools and Departments', 'school' ),
 			);
 
 		$args = array( 
