@@ -43,7 +43,34 @@ class KentNews {
 		//add all custom fields
 		$this->add_post_custom_fields_to_api();
 		$this->add_media_custom_fields_to_api();
+
+		// Enable custom preview
+		add_filter('preview_post_link',  array($this, 'front_end_preview'));
 	}
+
+	/**
+	 * Rewrite preview link to point to news front end
+	 */
+	function front_end_preview($link) {
+		
+		// Get post ID & STATUS
+		$id = get_the_ID();
+		$staus = get_post_status($id);
+
+		// If published post, use get autosave method to find "preview" id.
+		// Else just use id, if this is a draft post already
+	 	if($staus === 'publish'){
+	 		$preview = wp_get_post_autosave($id);
+	 		$preview_id = $preview->ID;
+	 		
+	 	}else{
+	 		$preview_id = $id;
+	 	}
+
+		// Build link (frontend url is configured in evn file)
+		return WP_FRONTEND."preview/".$preview_id."?preview&time=".time();
+	}
+
 
 	/**
 	 * Add a featured academic taxonomy so that we can add featured academics to our posts.
@@ -435,8 +462,11 @@ class KentNews {
 
 		if(!empty($catID)) {
 			$catTerms = get_term_by('term_id', $catID, 'category');
-			$catName = $catTerms->slug;
-			update_post_meta($post->ID, "primary_category", $catName);
+
+			if(isset($catTerms->slug)){
+				$catName = $catTerms->slug;
+				update_post_meta($post->ID, "primary_category", $catName);
+			}
 		}
 	}
 	
