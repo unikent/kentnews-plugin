@@ -44,8 +44,27 @@ class KentNews {
 		$this->add_post_custom_fields_to_api();
 		$this->add_media_custom_fields_to_api();
 
+		// Authenticate API
+		add_action('dispatch_api',  array($this, 'authenticate_api'));
+
 		// Enable custom preview
 		add_filter('preview_post_link',  array($this, 'front_end_preview'));
+	}
+
+	/**
+	 * validate access to thermal API's
+	 *
+	 */
+	function authenticate_api(){
+
+		if(!defined("API_KEY") || API_KEY === '') die("Disabled. Auth key not set.");
+
+		// Unless auth key is passed, disallow any connection to Thermal
+		if(!isset($_GET['api_key']) || $_GET['api_key'] !== API_KEY){
+			die("Authorization required.");
+		}
+		// If key is valid, run thermal as authenticated user.
+		wp_set_current_user(1);
 	}
 
 	/**
