@@ -11,9 +11,6 @@
 
 class KentNews {
 
-	// Key required to access thermal API's
-	protected static $api_key = '9dss12ffSFDkasfjkfkjas4fiGGIjweij3fkEsfs8laPIkf0-as';
-
 	/**
 	 * Our constructor
 	 */
@@ -59,8 +56,11 @@ class KentNews {
 	 *
 	 */
 	function authenticate_api(){
+
+		if(!defined("API_KEY") || API_KEY === '') die("Disabled. Auth key not set.");
+
 		// Unless auth key is passed, disallow any connection to Thermal
-		if(!isset($_GET['api_key']) || $_GET['api_key'] !== static::$api_key){
+		if(!isset($_GET['api_key']) || $_GET['api_key'] !== API_KEY){
 			die("Authorization required.");
 		}
 		// If key is valid, run thermal as authenticated user.
