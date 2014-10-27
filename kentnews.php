@@ -79,7 +79,7 @@ class KentNews {
 
 		// This code can only be initiated during API use & is read-only.
 		add_filter("is_user_logged_in", function(){
-		 	return ($_GET['api_key'] !== API_KEY); 
+		 	return ($_GET['api_key'] === API_KEY); 
 		});
 		wp_set_current_user(1);
 	}
