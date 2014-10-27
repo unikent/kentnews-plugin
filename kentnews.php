@@ -63,7 +63,24 @@ class KentNews {
 		if(!isset($_GET['api_key']) || $_GET['api_key'] !== API_KEY){
 			die("Authorization required.");
 		}
-		// If key is valid, run thermal as authenticated user.
+
+		// If key is valid, allow full api access
+		// Uses additional filter "is_user_logged_in" in wordpress-saml 
+
+		// Since this bit is somewhat weird, whats happening is:
+
+		// First is_user_logged_in pass(s) triggers "false" (as no id) - this doesn't matter as API 
+		// access is allowed to none users (this is just a general check).
+		// Second is_user_logged_in pass (once API has been invoked and this code has run), requires
+		// additional permissions. These are granted by setting current user to 1.
+		// Since SAML imposes additional checks, to avoid it kicking the session out (and triggering wp_logout)
+		// when we don't have valid SAML tokens, additionally override the "is_user_logged_in" via a filter
+		// of the same name.
+
+		// This code can only be initiated during API use & is read-only.
+		add_filter("is_user_logged_in", function(){
+		 	return ($_GET['api_key'] !== API_KEY); 
+		});
 		wp_set_current_user(1);
 	}
 
