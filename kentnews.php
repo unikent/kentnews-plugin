@@ -103,8 +103,11 @@ class KentNews {
 	 		$preview_id = $id;
 	 	}
 
-		// Build link (frontend url is configured in evn file)
-		return WP_FRONTEND."preview/".$preview_id."?preview&time=".time();
+	 	// Build preview key
+	 	$preview_key = md5($preview_id);
+
+		// Build link (frontend url is configured in .env file)
+		return WP_FRONTEND."preview/".$preview_id."?preview_key={$preview_key}time=".time();
 	}
 
 
