@@ -98,7 +98,6 @@ class KentNews {
 	 	if($staus === 'publish'){
 	 		$preview = wp_get_post_autosave($id);
 	 		$preview_id = $preview->ID;
-	 		
 	 	}else{
 	 		$preview_id = $id;
 	 	}
@@ -107,7 +106,7 @@ class KentNews {
 	 	$preview_key = md5($preview_id);
 
 		// Build link (frontend url is configured in .env file)
-		return WP_FRONTEND."preview/".$preview_id."?preview_key={$preview_key}time=".time();
+		return WP_FRONTEND."preview/".$preview_id."?preview_key={$preview_key}&time=".time();
 	}
 
 
