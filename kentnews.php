@@ -5,7 +5,7 @@
 	Description: Kent's own news plugin. Adds 'Featured Academics' and 'Schools' taxonomies to our posts.
 	Version: 0.0
 	Depends: Thermal API
-	Author: Justice Addison
+	Author: Justice Addison | Web Development
 	Author URI: http://blogs.kent.ac.uk/webdev/
 */
 
@@ -22,7 +22,7 @@ class KentNews {
 		add_action( 'academic_edit_form_fields', array( $this, 'academic_taxonomy_edit_meta_fields' ), 10, 2 );
 		add_action( 'edited_academic', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );  
 		add_action( 'create_academic', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );
-		add_filter( 'manage_edit-academic_columns', array( $this, 'academic_columns'), 10, 1); 
+		add_filter( 'manage_edit-academic_columns', array( $this, 'academic_columns'), 10, 1);
 
 		// school taxonomy
 		add_action( 'init', array( $this, 'register_taxonomy_school' )  );
@@ -35,6 +35,15 @@ class KentNews {
 
 		// Custom tag taxonomy
 		add_action( 'init', array( $this, 'register_taxonomy_tag' )  );
+
+		// coverage taxonomy
+		add_action( 'init', array( $this, 'register_taxonomy_coverage' )  );
+		add_action( 'coverage_add_form_fields', array( $this, 'coverage_taxonomy_add_new_meta_fields' ), 10, 2 );
+		add_action( 'coverage_edit_form_fields', array( $this, 'coverage_taxonomy_edit_meta_fields' ), 10, 2 );
+		add_action( 'edited_coverage', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );  
+		add_action( 'create_coverage', array( $this, 'save_taxonomy_custom_meta' ), 10, 2 );
+		add_filter( 'manage_edit-coverage_columns', array( $this, 'coverage_columns'), 10, 1);
+		add_filter( 'manage_coverage_custom_column', array( $this, 'manage_coverage_columns'), 10, 3);
 
 		// primary category
 		add_action('admin_init', array($this, 'primary_category_init'));
@@ -249,6 +258,52 @@ class KentNews {
 	}
 
 	/**
+	 * Add a media coverage taxonomy so that we can add media coverage to our posts.
+	 */
+	function register_taxonomy_coverage() {
+
+		$labels = array( 
+			'name' => _x( 'Media Coverage', 'coverage' ),
+			'singular_name' => _x( 'Media Coverage', 'coverage' ),
+			'search_items' => _x( 'Search Media Coverage', 'coverage' ),
+			'popular_items' => _x( 'Popular Media Coverage', 'coverage' ),
+			'all_items' => _x( 'All Media Coverage', 'coverage' ),
+			'parent_item' => _x( 'Parent Media Coverage', 'coverage' ),
+			'parent_item_colon' => _x( 'Parent Media Coverage:', 'coverage' ),
+			'edit_item' => _x( 'Edit Media Coverage', 'coverage' ),
+			'update_item' => _x( 'Update Media Coverage', 'coverage' ),
+			'add_new_item' => _x( 'Add New Media Coverage', 'coverage' ),
+			'new_item_name' => _x( 'New Media Coverage', 'coverage' ),
+			'separate_items_with_commas' => _x( 'Separate Media Coverage with commas', 'coverage' ),
+			'add_or_remove_items' => _x( 'Add or remove Media Coverage', 'coverage' ),
+			'choose_from_most_used' => _x( 'Choose from most used Media Coverage', 'coverage' ),
+			'menu_name' => _x( 'Media Coverage', 'coverage' ),
+			);
+
+		$args = array( 
+			'labels' => $labels,
+			'public' => true,
+			'show_in_nav_menus' => true,
+			'show_ui' => true,
+			'show_tagcloud' => true,
+			'show_admin_column' => true,
+			'hierarchical' => true,
+			'rewrite' => true,
+			'meta_box_cb' => 'post_categories_meta_box', /*TODO: this creates a bug when heirarchical is false. Fix it!*/
+			'query_var' => true,
+			/* TODO: find the right capabilities to use */
+			'capabilities' => array(
+				'manage_terms' => 'manage_categories',
+				'assign_terms' => 'manage_categories',
+				'edit_terms' => 'manage_categories',
+				'delete_terms' => 'manage_categories'
+				)
+			);
+
+		register_taxonomy( 'coverage', array('post'), $args );
+	}
+
+	/**
 	 * Function to add custom fields (meta) to academic taxonomy.
 	 */
 	function academic_taxonomy_add_new_meta_fields() {
@@ -355,6 +410,81 @@ class KentNews {
 		switch ($column_name) {
 			case 'short_name': 
 				$column_value = isset($school_meta['short_name']) ? $school_meta['short_name'] : ''; 
+				break;
+			default:
+				break;
+		}
+		
+		return $column_value;    
+	}
+
+	/**
+	 * Function to add custom fields (meta) to coverage taxonomy.
+	 */
+	function coverage_taxonomy_add_new_meta_fields() {
+		// this will add the custom meta field to the add new term page
+		?>
+		<div class="form-field">
+			<label for="term_meta[url]"><?php _e( 'URL', 'coverage' ); ?></label>
+			<input type="text" name="term_meta[url]" id="term_meta[url]" value="">
+			<p class="description"><?php _e( 'Enter a URL for this coverage','coverage' ); ?></p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Function to edit custom fields (meta) in coverage taxonomy.
+	 */
+	function coverage_taxonomy_edit_meta_fields($term) {
+
+		// put the term ID into a variable
+		$t_id = $term->term_id;
+
+		// retrieve the existing value(s) for this meta field. This returns an array
+		$term_meta = get_option( "taxonomy_$t_id" ); 
+		?>
+		<tr class="form-field">
+			<th scope="row" valign="top"><label for="term_meta[url]"><?php _e( 'URL', 'coverage' ); ?></label></th>
+			<td>
+				<input type="text" name="term_meta[url]" id="term_meta[url]" value="<?php echo esc_attr( $term_meta['url'] ) ? esc_attr( $term_meta['url'] ) : ''; ?>">
+				<p class="description"><?php _e( 'Enter a URL for this coverage','coverage' ); ?></p>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Function to specify custom colums in coverage taxonomy.
+	 */
+	function coverage_columns($coverage_columns) {
+		// unset($coverage_columns['description']);
+		// return $coverage_columns;
+
+		$new_columns = array(
+			'cb' => '<input type="checkbox" />',
+			'name' => __('Name'),
+			'url' => 'URL',
+			'slug' => __('Slug'),
+			'posts' => __('Count')
+		);
+		return $new_columns;
+	}
+
+	/**
+	 * Function to set custom colums in coverage taxonomy.
+	 */
+	function manage_coverage_columns($out, $column_name, $term_id) {
+
+		// retrieve the existing value(s) for this meta field. This returns an array
+		$coverage_meta = get_option( "taxonomy_$term_id" ); 
+
+		//$coverage = get_term($term_id, 'coverage');
+
+		$column_value = '';
+
+		switch ($column_name) {
+			case 'url': 
+				$column_value = isset($coverage_meta['url']) ? $coverage_meta['url'] : ''; 
 				break;
 			default:
 				break;
