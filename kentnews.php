@@ -47,8 +47,20 @@ class KentNews {
 		// Authenticate API
 		add_action('dispatch_api',  array($this, 'authenticate_api'));
 
+		// Force frontend redirect from news backend public site
+		add_action('get_header',  array($this, 'redirect_frontend'));
+
 		// Enable custom preview
 		add_filter('preview_post_link',  array($this, 'front_end_preview'));
+	}
+
+	/**
+	 * If a single article is being viewed, auto redirect to front end version
+	 */
+	function redirect_frontend(){
+		if(is_single() && isset($_GET['preview_id'])){
+			return wp_redirect( $this->front_end_preview() );
+		}
 	}
 
 	/**
@@ -87,26 +99,25 @@ class KentNews {
 	/**
 	 * Rewrite preview link to point to news front end
 	 */
-	function front_end_preview($link) {
+	function front_end_preview($link='') {
 		
 		// Get post ID & STATUS
 		$id = get_the_ID();
-		$staus = get_post_status($id);
+		$status = get_post_status($id);
 
 		// If published post, use get autosave method to find "preview" id.
 		// Else just use id, if this is a draft post already
-	 	if($staus === 'publish'){
+	 	if($status === 'publish'){
 	 		$preview = wp_get_post_autosave($id);
-	 		$preview_id = $preview->ID;
-	 	}else{
-	 		$preview_id = $id;
-	 	}
+	 		// if preview id found, use it.
+	 		if($preview) $id = $preview->ID;
+	 	}	
 
 	 	// Build preview key
-	 	$preview_key = md5($preview_id);
+	 	$preview_key = md5($id);
 
 		// Build link (frontend url is configured in .env file)
-		return WP_FRONTEND."preview/".$preview_id."?preview_key={$preview_key}&time=".time();
+		return WP_FRONTEND."preview/{$id}?preview_key={$preview_key}&time=".time();
 	}
 
 
