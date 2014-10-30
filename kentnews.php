@@ -52,6 +52,7 @@ class KentNews {
 		//add all custom fields
 		$this->add_post_custom_fields_to_api();
 		$this->add_media_custom_fields_to_api();
+		$this->add_term_custom_fields_to_api();
 
 		// Authenticate API
 		add_action('dispatch_api',  array($this, 'authenticate_api'));
@@ -560,6 +561,22 @@ class KentNews {
 
 				$data->meta->sections = $custom_fields->sections;
 				$data->meta->custom_fields = $custom_fields->additional;
+			}
+			return $data;
+		}, 10, 3);
+	}
+
+	/**
+	 * Add term custom fields to the api.
+	 */
+	function add_term_custom_fields_to_api(){
+		add_filter( 'thermal_term_entity', function($data, &$term, $state ) {
+			if( $state === 'read' ){
+				$term_id = $term->term_id;
+				
+				$term_meta = get_option( "taxonomy_$term_id" ); 
+			
+				$data->meta = (object) $term_meta;
 			}
 			return $data;
 		}, 10, 3);
