@@ -530,17 +530,10 @@ class KentNews {
 		add_filter( 'thermal_post_entity', function($data, &$post, $state ) {
 			if( $state === 'read' ){
 				foreach ($data->media as &$media_item) {
-					$media_post = get_post($media_item['id']);
-
-					//add more data
-					$media_item['name'] = $media_post->post_name;
-					$media_item['description'] = $media_post->post_content;
-					$media_item['caption'] = $media_post->post_excerpt;
-					$media_item['title'] = $media_post->post_title;
 
 					// add custom fields
-					$custom_fields = KentNews::get_custom_fields_from_post($media_post->ID);
-					foreach ($custom_fields->additional as $field_name => $field_value) {
+					$custom_fields = KentNews::get_custom_fields_from_post($media_item['id']);
+					foreach ($custom_fields as $field_name => $field_value) {
 						$media_item[$field_name] = $field_value;
 					}
 
@@ -559,8 +552,7 @@ class KentNews {
 
 				$custom_fields = KentNews::get_custom_fields_from_post($post->ID);
 
-				$data->meta->sections = $custom_fields->sections;
-				$data->meta->custom_fields = $custom_fields->additional;
+				$data->meta->custom_fields = $custom_fields;
 			}
 			return $data;
 		}, 10, 3);
@@ -596,7 +588,6 @@ class KentNews {
 		//$data->meta->custom_fields_raw = $custom_fields_raw;
 
 		// create an object for storing all the post data
-		$sections = new StdClass;
 		$custom_fields_additional = array();
 
 		foreach ($custom_fields_raw as $fieldName => $content) {
@@ -607,23 +598,18 @@ class KentNews {
 
 		}
 
-		$custom_fields->sections = $sections;
-		$custom_fields->additional = (object) $custom_fields_additional;
-
-		return $custom_fields;
+		return (object) $custom_fields_additional;
 	}
 
 	static function north_cast_api_data($content) {
 		if (is_numeric($content)) $content = intval($content);
 		else {
-			$unserialized_content = @unserialize($content);
-			// we got serialized content
-			if ($unserialized_content !== false) {
+			$content = maybe_unserialize($content);
+			if (is_array($content)) {
 				// make sure that integers are represented as such, instead of str
-				foreach ($unserialized_content as $fn => &$c) {
+				foreach ($content as $fn => &$c) {
 					if (is_numeric($c)) $c = intval($c);
 				}
-				$content = $unserialized_content;
 			}
 		}
 		return $content;
