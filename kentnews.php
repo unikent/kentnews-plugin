@@ -51,6 +51,7 @@ class KentNews {
 
 		//add all custom fields
 		$this->add_post_custom_fields_to_api();
+		$this->add_media_custom_fields_to_api();
 		$this->add_term_custom_fields_to_api();
 
 		// Authenticate API
@@ -520,6 +521,33 @@ class KentNews {
 			// Save the option array.
 			update_option( "taxonomy_$t_id", $term_meta );
 		}
+	}
+
+	/**
+	 * Add extra data to media in the api.
+	 */
+	function add_media_custom_fields_to_api(){
+		add_filter( 'thermal_post_entity', function($data, &$post, $state ) {
+			if( $state === 'read' ){
+				$featured_image_id = (isset($data->featured_image) && !empty($data->featured_image)) ? $data->featured_image['id'] : false;
+				foreach ($data->media as &$media_item) {
+
+					// add custom fields
+					$custom_fields = KentNews::get_custom_fields_from_post($media_item['id']);
+					foreach ($custom_fields as $field_name => $field_value) {
+						$media_item[$field_name] = $field_value;
+					}
+
+					if ($featured_image_id) {
+						if ($media_item['id'] === $featured_image_id) {
+							$data->featured_image = $media_item;
+						}
+					}
+
+				}
+			}
+			return $data;
+		}, 10, 3);
 	}
 
 	/**
