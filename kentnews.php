@@ -574,8 +574,10 @@ class KentNews {
 				$term_id = $term->term_id;
 				
 				$term_meta = get_option( "taxonomy_$term_id" ); 
-			
-				$data->meta = (object) $term_meta;
+				
+				if(!empty($term_meta)) {
+					$data->meta = (object)$term_meta;
+				}
 			}
 			return $data;
 		}, 10, 3);
