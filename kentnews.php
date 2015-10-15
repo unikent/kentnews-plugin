@@ -532,12 +532,6 @@ class KentNews {
 				$featured_image_id = (isset($data->featured_image) && !empty($data->featured_image)) ? $data->featured_image['id'] : false;
 				foreach ($data->media as &$media_item) {
 
-					// add custom fields
-					$custom_fields = KentNews::get_custom_fields_from_post($media_item['id']);
-					foreach ($custom_fields as $field_name => $field_value) {
-						$media_item[$field_name] = $field_value;
-					}
-
 					if ($featured_image_id) {
 						if ($media_item['id'] === $featured_image_id) {
 							$data->featured_image = $media_item;
