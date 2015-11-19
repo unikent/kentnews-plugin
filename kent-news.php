@@ -5,10 +5,6 @@ require_once('kentnews/taxonomy-tag.php');
 require_once('kentnews/taxonomy-school.php');
 require_once('kentnews/taxonomy-academic.php');
 
-require_once('../../../vendor/haddowg/metamaterial/MetaMaterial.php');
-require_once('../../../vendor/haddowg/metamaterial/MM_Loop.php');
-require_once('../../../vendor/haddowg/metamaterial/MM_Metabox.php');
-
 require_once('kentnews/post-metaboxes.php');
 
 class KentNews {
