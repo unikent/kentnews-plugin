@@ -4,7 +4,7 @@ require_once('kentnews/taxonomy-general.php');
 require_once('kentnews/taxonomy-tag.php');
 require_once('kentnews/taxonomy-school.php');
 require_once('kentnews/taxonomy-academic.php');
-
+require_once('kentnews/responsive-videos/responsive-videos.php');
 require_once('kentnews/post-metaboxes.php');
 
 class KentNews {
