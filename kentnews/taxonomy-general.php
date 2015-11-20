@@ -17,3 +17,17 @@ function kentnews_save_taxonomy_custom_meta( $term_id ) {
 		update_option( "taxonomy_$t_id", $term_meta );
 	}
 }
+
+function kentnews_add_term_meta_to_api_output($data, &$term, $state ) {
+	if( $state === 'read' ){
+		$term_id = $term->term_id;
+
+		$term_meta = get_option( "taxonomy_$term_id" );
+
+		if(!empty($term_meta)) {
+			$data->meta = (object)$term_meta;
+		}
+	}
+	return $data;
+}
+add_filter( 'thermal_term_entity', 'kentnews_add_term_meta_to_api_output', 10, 3);

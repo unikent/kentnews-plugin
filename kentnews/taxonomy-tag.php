@@ -1,5 +1,52 @@
 <?php
 
+add_action( 'init', 'kentnews_register_taxonomy_tag' );
+
+/**
+ * Add a custom Tag taxonomy so that we can permission tag creation.
+ */
+function kentnews_register_taxonomy_tag() {
+
+	$labels = array(
+		'name' => _x( 'Tags', 'tag' ),
+		'singular_name' => _x( 'tag', 'tag' ),
+		'search_items' => _x( 'Search Tag', 'tag' ),
+		'popular_items' => _x( 'Popular Tag', 'tag' ),
+		'all_items' => _x( 'All Tag', 'tag' ),
+		'parent_item' => _x( 'Parent tag', 'tag' ),
+		'parent_item_colon' => _x( 'Parent tag:', 'tag' ),
+		'edit_item' => _x( 'Edit tag', 'tag' ),
+		'update_item' => _x( 'Update tag', 'tag' ),
+		'add_new_item' => _x( 'Add New tag', 'tag' ),
+		'new_item_name' => _x( 'New tag', 'tag' ),
+		'separate_items_with_commas' => _x( 'Separate Tag with commas', 'tag' ),
+		'add_or_remove_items' => _x( 'Add or remove Tag', 'tag' ),
+		'choose_from_most_used' => _x( 'Choose from most used Tag', 'tag' ),
+		'menu_name' => _x( 'Tags', 'tag' ),
+	);
+
+	$args = array(
+		'labels' => $labels,
+		'public' => true,
+		'show_in_nav_menus' => false,
+		'show_ui' => true,
+		'show_tagcloud' => false,
+		'show_admin_column' => true,
+		'hierarchical' => false,
+		'rewrite' => false,
+		'meta_box_cb' => 'kentnews_predefined_tags_meta_box',
+		'query_var' => 'tags',
+		'capabilities' => array(
+			'manage_terms' => 'manage_categories',
+			'assign_terms' => 'manage_categories',
+			'edit_terms' => 'manage_categories',
+			'delete_terms' => 'manage_categories'
+		)
+	);
+
+	register_taxonomy( 'tag', array('post'), $args );
+}
+
 
 /**
  * Remove original tags admin box & admin page
@@ -15,7 +62,7 @@ add_action( 'admin_menu', 'kentnews_remove_default_tags' );
  * Add meta box for editing predefined tags in a post
  *
  */
-function predefined_tags_meta_box($post, $box) {
+function kentnews_predefined_tags_meta_box($post, $box) {
 	$defaults = array('taxonomy' => 'post_tag');
 	if ( !isset($box['args']) || !is_array($box['args']) )
 		$args = array();

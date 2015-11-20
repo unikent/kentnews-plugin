@@ -1,12 +1,4 @@
-#introtext_metamaterial {
-
-	border:     none;
-	background: transparent;
-
-	.inside {
-		margin:  0;
-		padding: 0;
-	}
+#introtext_metamaterial, #excerpt_metabox {
 	textarea {
 		background-color: #FFFFFF;
 		font-size:        1em;
@@ -18,4 +10,84 @@
 		width:            100%;
 		resize: none;
 	}
+}
+
+#tagsdiv-media_source,
+#screen-meta label[for="tagsdiv-media_source-hide"],
+#screen-meta label[for="postexcerpt-hide"]{display: none;}
+
+#previewButtons{
+
+	padding:10px;
+	overflow: hidden;
+
+	a.button{
+		margin-right: 5px;
+		margin-bottom: 5px;
+	}
+}
+
+#postmeta_metamaterial{
+	.mm_input_group{
+		margin-bottom: 15px;
+		label{
+			font-weight: bold;
+			display: block;
+		}
+		input{
+			width: 100%;
+		}
+	}
+
+	p.help-text{
+		margin:0;
+		font-size: 90%;
+		color: #666;
+	}
+	.mm_loop{
+		margin: 10px;
+
+		.mm_group{
+			padding: 10px 10px 10px 30px;
+			background: #f3f3f3;
+			border-bottom:2px solid #BBB;
+			overflow: hidden;
+			position: relative;
+
+			&:before{
+				content: "\f156";
+				font-family: dashicons;
+				font-size: 1.5em;
+				position: absolute;
+				top:5px;
+				left:5px;
+				color: #999;
+			}
+
+			&:nth-child(even){
+				background: #DDD;
+			}
+
+			&:first-child{
+				border-top:2px solid #BBB;
+			}
+			.mm_dodelete{
+				float:right;
+			}
+		}
+	}
+
+	.button{
+		.dashicons{
+			&.dashicons-trash:before{
+				margin-top: 2px;
+				display: block;
+			}
+			&.dashicons-plus:before{
+				margin-top: 4px;
+				display: block;
+			}
+		}
+	}
+
 }
