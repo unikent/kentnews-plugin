@@ -30,14 +30,50 @@ function kentnews_postmeta_save_filter($meta, $post_id, $is_ajax){
 	}
 
 	if(isset($meta['coverage']) && !empty($meta['coverage'])){
+
+		$sources = get_transient('media_sources_map');
+
+		if($sources === false){
+			kentnews_set_media_source_map();
+		}
+
 		foreach($meta['coverage'] as &$item){
+
+			foreach($sources as $source=>$url){
+				if(strpos($item['url'], $url) !== false) {
+					$item['source'] = $source;
+					break;
+				}
+			}
+
 			if(empty($item['source'])){
 				$item['source'] = parse_url($item['url'],PHP_URL_HOST);
 			}
+
 		}
 	}
 
 	return $meta;
+}
+
+function kentnews_set_media_source_map(){
+	set_transient('media_sources_map',kentnews_build_media_source_map(),0);
+}
+
+function kentnews_build_media_source_map(){
+
+	$sources=array();
+	$media_sources = get_terms('media_source',array('hide_empty'=>false));
+
+	foreach($media_sources as $source){
+
+		$meta = get_option('taxonomy_'.$source->term_id);
+		if(!empty($meta) && isset($meta['url'])) {
+			$sources[$source->name] = $meta['url'];
+		}
+	}
+
+	return $sources;
 }
 
 function kentnews_enqueue_post_metabox_styles($hook_suffix) {
