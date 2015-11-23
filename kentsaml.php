@@ -157,7 +157,7 @@ function kent_wp_saml_authenticate($user, $username) {
 		$user_info['first_name'] = $attributes['givenName'][0];
 		$user_info['last_name'] = $attributes['sn'][0];
 
-		$user_info['role'] = "author";
+		$user_info['role'] = "subscriber";
 
 
 		$wp_uid = wp_insert_user($user_info);
