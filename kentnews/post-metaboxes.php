@@ -22,7 +22,7 @@ MM_Metabox::getInstance('postmeta', array(
 
 function kentnews_postmeta_save_filter($meta, $post_id, $is_ajax){
 
-	if($meta['primary_category'] === -1){
+	if($meta['primary_category'] == -1){
 		unset($meta['primary_category']);
 	}else{
 		$term = get_term($meta['primary_category'],'category');
