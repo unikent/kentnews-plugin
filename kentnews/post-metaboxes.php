@@ -93,6 +93,9 @@ function kentnews_add_post_meta_to_api($data, &$post, $state ) {
 		$intro = MM_Metabox::getInstance('introtext')->meta($post->ID);
 		$postmeta = MM_Metabox::getInstance('postmeta')->meta($post->ID);
 
+		$intro = empty($intro) ? array() : $intro;
+		$postmeta = empty($postmeta) ? array() : $postmeta;
+
 		$custom_fields = array_merge($intro,$postmeta);
 
 		$data->meta->custom_fields = $custom_fields;
