@@ -1,8 +1,9 @@
 <?php
+$path =getenv('KENTAUTH_SAML_PATH');
+define('KENTAUTH_SAML_PATH', !empty($path) ? $path : realpath('../../sp/simplesamlphp'));
 
-define('KENTAUTH_SAML_PATH', getenv('KENTAUTH_SAML_PATH') ? getenv('KENTAUTH_SAML_PATH') : realpath('../../sp/simplesamlphp'));
-
-define('KENTAUTH_SP', getenv('KENTAUTH_SP') ? getenv('KENTAUTH_SP') : 'default-sp');
+$sp = getenv('KENTAUTH_SP');
+define('KENTAUTH_SP', !empty($sp) ? $sp : 'default-sp');
 
 $saml_included =true;
 
