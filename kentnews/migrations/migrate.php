@@ -180,7 +180,7 @@ foreach($posts as $post){
 	$exisitng_coverage = get_the_terms($post->ID,'coverage');
 	if(!empty($exisitng_coverage)) {
 		foreach($exisitng_coverage as $term) {
-			$item = [];
+			$item = array();
 
 			$meta = get_option('taxonomy_' . $term->term_id);
 			if(!empty($meta) && array_key_exists('url', $meta)) {
