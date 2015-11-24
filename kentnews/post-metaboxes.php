@@ -19,6 +19,16 @@ MM_Metabox::getInstance('postmeta', array(
 	'save_filter'=>'kentnews_postmeta_save_filter'
 ));
 
+MM_Metabox::getInstance('position', array(
+	'title'=> 'Homepage Post Position',
+	'view' => MM_Metabox::VIEW_ALWAYS_OPEN,
+	'lock' =>true,
+	'context'=>'after_title',
+	'priority' =>'bottom',
+	'mode' => HaddowG\MetaMaterial\Metamaterial::STORAGE_MODE_EXTRACT,
+	'template'=> dirname(__FILE__).'/metaboxes/position.php',
+	'save_filter'=>'kentnews_position_save_filter'
+));
 
 function kentnews_postmeta_save_filter($meta, $post_id, $is_ajax){
 
@@ -55,6 +65,14 @@ function kentnews_postmeta_save_filter($meta, $post_id, $is_ajax){
 
 	return $meta;
 }
+
+function kentnews_position_save_filter($meta, $post_id, $is_ajax){
+
+	wp_set_post_terms($post_id,$meta['homepage_position'],'position');
+
+	return false;
+}
+
 
 function kentnews_set_media_source_map(){
 	set_transient('media_sources_map',kentnews_build_media_source_map(),0);

@@ -5,6 +5,7 @@ require_once('kentnews/taxonomy-tag.php');
 require_once('kentnews/taxonomy-school.php');
 require_once('kentnews/taxonomy-academic.php');
 require_once('kentnews/taxonomy-media-source.php');
+require_once('kentnews/taxonomy-position.php');
 
 require_once('kentnews/responsive-videos.php');
 

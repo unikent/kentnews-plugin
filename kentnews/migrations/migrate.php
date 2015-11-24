@@ -105,6 +105,15 @@ $sources = array(
 	'Net India 123'=> array('netindia123','www.netindia123.com')
 );
 
+$positions= array('Hero','Feature 1', 'Feature 2', 'Feature 3', 'Standard Item');
+foreach($positions as &$p){
+	$t = wp_insert_term($p,'position');
+	$term = get_term($t['term_id'],'position');
+	$p = $term->slug;
+}
+
+echo 'inserted new positional taxonomy terms';
+echo "<br />";
 
 $posts = get_posts(array(
    'post_type'=>'post',
@@ -113,6 +122,20 @@ $posts = get_posts(array(
 ));
 
 foreach($posts as $post){
+
+	$tags = wp_get_post_terms($post->ID,'tag',array('fields'=>'slugs'));
+
+	if(in_array('hero',$tags)){
+		wp_set_post_terms($post->ID,$positions[0],'position');
+	}elseif(in_array('feature1',$tags)){
+		wp_set_post_terms($post->ID,$positions[1],'position');
+	}elseif(in_array('feature2',$tags)){
+		wp_set_post_terms($post->ID,$positions[2],'position');
+	}elseif(in_array('feature3',$tags)){
+		wp_set_post_terms($post->ID,$positions[3],'position');
+	}else{
+		wp_set_post_terms($post->ID,$positions[4],'position');
+	}
 
 	//intro text
 	update_post_meta($post->ID,'introtext',$post->post_excerpt);
@@ -191,10 +214,20 @@ foreach($posts as $post){
 }
 
 echo count($posts) . " posts migrated";
-
+echo "<br />";
 
 
 foreach($sources as $source => $data){
 	$t = wp_insert_term($source,'media_source',array('slug'=>$data[0]));
 	add_option('taxonomy_' . $t['term_id'],array('url' => $data[1]));
 }
+echo 'inserted ' . count($sources) . ' media sources';
+echo "<br />";
+
+wp_delete_term(38,'tag');
+wp_delete_term(123,'tag');
+wp_delete_term(124,'tag');
+wp_delete_term(125,'tag');
+
+echo 'deleted old positional tags';
+echo "<br />";
