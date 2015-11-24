@@ -32,7 +32,7 @@ MM_Metabox::getInstance('position', array(
 
 function kentnews_postmeta_save_filter($meta, $post_id, $is_ajax){
 
-	if($meta['primary_category'] === -1){
+	if($meta['primary_category'] == -1){
 		unset($meta['primary_category']);
 	}else{
 		$term = get_term($meta['primary_category'],'category');
@@ -110,6 +110,9 @@ function kentnews_add_post_meta_to_api($data, &$post, $state ) {
 
 		$intro = MM_Metabox::getInstance('introtext')->meta($post->ID);
 		$postmeta = MM_Metabox::getInstance('postmeta')->meta($post->ID);
+
+		$intro = empty($intro) ? array() : $intro;
+		$postmeta = empty($postmeta) ? array() : $postmeta;
 
 		$custom_fields = array_merge($intro,$postmeta);
 
