@@ -26,7 +26,7 @@ function kentnews_register_taxonomy_position() {
 
 	$args = array(
 		'labels' => $labels,
-		'public' => false,
+		'public' => true,
 		'show_in_nav_menus' => false,
 		'show_ui' => false,
 		'show_in_menu' => true,
