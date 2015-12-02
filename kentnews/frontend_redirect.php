@@ -80,11 +80,11 @@ function kentnews_authenticate_api(){
 function kentnews_homepage_preview_links(){
 	global $post;
 	echo '<div id="previewButtons"><h4>Preview on News Center homepage as:</h4>';
-	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/standard?preview_key=' . API_KEY .'}">Standard Item</a>';
 	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/hero?preview_key=' . API_KEY .'}">Hero</a>';
 	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature1?preview_key=' . API_KEY .'}">Feature 1</a>';
 	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature2?preview_key=' . API_KEY .'}">Feature 2</a>';
-	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature3?preview_key=' . API_KEY .'}">Feature 3</a></div>';
+	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature3?preview_key=' . API_KEY .'}">Feature 3</a>';
+    echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/standard?preview_key=' . API_KEY .'}">Standard Item</a></div>';
 
 }
 add_action('post_submitbox_misc_actions','kentnews_homepage_preview_links');

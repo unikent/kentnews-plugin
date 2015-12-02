@@ -1,32 +1,3 @@
-<?php
-$sources = get_terms('media_source',array('hide_empty'=>false));
-
-$mm->the_field('primary_category');
-$cat = $mm->get_the_value();
-$selected="";
-
-if (!empty($cat)) {
-	$catTerms = get_term_by('slug', $cat, 'category');
-	$categoryID = $catTerms->term_id;
-	$selected = "&selected=" . $categoryID;
-}
-
-?>
-<div class="mm_input_group">
-<label for="<?php $mm->the_name();?>">Primary Category:</label>
-<?php
-	wp_dropdown_categories('show_option_none=Select category&name=' . $mm->get_the_name() . '&hide_empty=0' . $selected);
-?>
-</div>
-<?php
-$mm->the_field('featured_video');
-?>
-<div class="mm_input_group">
-	<label for="<?php $mm->the_name();?>">Featured Video:</label>
-	<input id="<?php $mm->the_name();?>" type="text" name="<?php $mm->the_name();?>" value="<?php $mm->the_value(); ?>">
-	<p class="help-text">a youtube url from the 'share' tab on youtube. eg. http://youtu.be/4JilOCxIjm8</p>
-</div>
-
 <strong>Related Links</strong>
 <p class="help-text">add as many related links as you need, drag to reorder</p>
 <div class="mm_input_group">

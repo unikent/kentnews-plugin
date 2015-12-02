@@ -160,21 +160,6 @@ foreach($posts as $post){
 		$fields[] = 'related';
 	}
 
-	$cat = get_post_meta($post->ID,'primary_category',true);
-	if(!empty($cat)){
-		$fields[] = 'primary_category';
-	}else{
-		delete_post_meta($post->ID,'primary_category');
-	}
-
-	$vid = get_post_meta($post->ID,'featured_video',true);
-	if(!empty($vid)){
-		$fields[] = 'featured_video';
-	}else{
-		delete_post_meta($post->ID,'featured_video');
-	}
-	delete_post_meta($post->ID,'_featured_video');
-
 	$coverage = array();
 
 	$exisitng_coverage = get_the_terms($post->ID,'coverage');
@@ -211,6 +196,22 @@ foreach($posts as $post){
 
 
 	update_post_meta($post->ID,'_postmeta_fields',$fields);
+
+
+    $cat = get_post_meta($post->ID,'primary_category',true);
+    if(!empty($cat)){
+        update_post_meta($post->ID,'_primary_category_fields',array('primary_category'));
+    }else{
+        delete_post_meta($post->ID,'primary_category');
+    }
+
+    $vid = get_post_meta($post->ID,'featured_video',true);
+    if(!empty($vid)){
+        update_post_meta($post->ID,'_featured_video_fields',array('featured_video'));
+    }else{
+        delete_post_meta($post->ID,'featured_video');
+    }
+    delete_post_meta($post->ID,'_featured_video');
 }
 
 echo count($posts) . " posts migrated";
