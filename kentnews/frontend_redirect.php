@@ -84,7 +84,7 @@ function kentnews_homepage_preview_links(){
 	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature1?preview_key=' . API_KEY .'}">Feature 1</a>';
 	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature2?preview_key=' . API_KEY .'}">Feature 2</a>';
 	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature3?preview_key=' . API_KEY .'}">Feature 3</a>';
-    echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/standard?preview_key=' . API_KEY .'}">Standard Item</a></div>';
+    	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/standard?preview_key=' . API_KEY .'}">Standard Item</a></div>';
 
 }
 add_action('post_submitbox_misc_actions','kentnews_homepage_preview_links');
