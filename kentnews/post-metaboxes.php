@@ -134,11 +134,15 @@ function kentnews_add_post_meta_to_api($data, &$post, $state ) {
 
 		$intro = MM_Metabox::getInstance('introtext')->meta($post->ID);
 		$postmeta = MM_Metabox::getInstance('postmeta')->meta($post->ID);
+		$video = MM_Metabox::getInstance('featured_video')->meta($post->ID);
+		$primary_cat = MM_Metabox::getInstance('primary_category')->meta($post->ID);
 
 		$intro = empty($intro) ? array() : $intro;
 		$postmeta = empty($postmeta) ? array() : $postmeta;
+		$video = empty($video) ? array() : $video;
+		$primary_cat = empty($primary_cat) ? array() : $primary_cat;
 
-		$custom_fields = array_merge($intro,$postmeta);
+		$custom_fields = array_merge($intro,$postmeta,$video,$primary_cat);
 
 		$data->meta->custom_fields = $custom_fields;
 	}
