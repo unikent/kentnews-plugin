@@ -1,17 +1,4 @@
 <?php
-
-// Force frontend redirect from news backend public site
-add_action('get_header', 'kentnews_redirect_frontend');
-
-/**
- * If a single article is being viewed, auto redirect to front end version
- */
-function kentnews_redirect_frontend(){
-	if(is_single() && isset($_GET['preview_id'])){
-		return wp_redirect( kentnews_front_end_preview() );
-	}
-}
-
 // Enable custom preview
 add_filter('preview_post_link', 'kentnews_front_end_preview');
 
@@ -21,7 +8,7 @@ add_filter('preview_post_link', 'kentnews_front_end_preview');
 function kentnews_front_end_preview($link='') {
 
 	// Get post ID & STATUS
-	$id = get_the_ID();
+	$id = isset($_GET['preview_id'])?$_GET['preview_id']:get_the_ID();
 	$status = get_post_status($id);
 
 	// If published post, use get autosave method to find "preview" id.
