@@ -33,7 +33,7 @@ function kentnews_front_end_preview($link='') {
 	}
 
 	// Build preview key
-	$preview_key = md5($id);
+	$preview_key = md5($id . 'kfn84kjb');
 
 	// Build link (frontend url is configured in .env file)
 	return WP_FRONTEND."preview/{$id}?preview_key={$preview_key}&time=".time();
@@ -80,11 +80,11 @@ function kentnews_authenticate_api(){
 function kentnews_homepage_preview_links(){
 	global $post;
 	echo '<div id="previewButtons"><h4>Preview on News Center homepage as:</h4>';
-	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/hero?preview_key=' . API_KEY .'}">Hero</a>';
-	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature1?preview_key=' . API_KEY .'}">Feature 1</a>';
-	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature2?preview_key=' . API_KEY .'}">Feature 2</a>';
-	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature3?preview_key=' . API_KEY .'}">Feature 3</a>';
-    	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/standard?preview_key=' . API_KEY .'}">Standard Item</a></div>';
+	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/hero?preview_key=' . md5($post->ID . 'kfn84kjb') .'}">Hero</a>';
+	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature1?preview_key=' . md5($post->ID . 'kfn84kjb') .'}">Feature 1</a>';
+	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature2?preview_key=' . md5($post->ID . 'kfn84kjb') .'}">Feature 2</a>';
+	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/feature3?preview_key=' . md5($post->ID . 'kfn84kjb') .'}">Feature 3</a>';
+    	echo '<a class="button" href="' . WP_FRONTEND .'preview/index/' . $post->ID . '/standard?preview_key=' . md5($post->ID . 'kfn84kjb') .'}">Standard Item</a></div>';
 
 }
 add_action('post_submitbox_misc_actions','kentnews_homepage_preview_links');
