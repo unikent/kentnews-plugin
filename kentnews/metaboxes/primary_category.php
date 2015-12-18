@@ -16,4 +16,3 @@ $selected = "&selected=" . $categoryID;
     wp_dropdown_categories('show_option_none=Select category&name=' . $mm->get_the_name() . '&hide_empty=0' . $selected);
     ?>
 </div>
-<?php
