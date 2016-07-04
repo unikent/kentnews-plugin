@@ -56,6 +56,7 @@ function kentnews_primary_category_save_filter($meta, $post_id, $is_ajax)
     } else {
         $term = get_term($meta['primary_category'], 'category');
         $meta['primary_category'] = $term->slug;
+		wp_set_post_categories($post_id,array($term->term_id),true);
     }
 
     return $meta;
