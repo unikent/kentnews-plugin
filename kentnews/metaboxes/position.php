@@ -1,5 +1,5 @@
 <?php
-$positions = get_terms('position',array('orderby' => 'id'));
+$positions = get_terms(array('orderby' => 'id', 'taxonomy' => 'position', 'hide_empty' => false));
 
 $current = "standard-item";
 $pos = wp_get_post_terms($post->ID,'position');
